@@ -1,4 +1,5 @@
 # Components Map
+n> **PDF version:** [docs/ott-release-radar-components-map.pdf](docs/ott-release-radar-components-map.pdf) (page 1: step-by-step map; page 2: step details). Regenerate with `node docs/components-map/build.mjs`, then print the HTML to PDF.
 
 How the frontend components, API routes, services, database tables and external services of OTT Release Radar fit together. For setup and behaviour details see [README.md](./README.md).
 

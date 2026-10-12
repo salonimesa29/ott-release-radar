@@ -1,0 +1,140 @@
+<!doctype html><html><head><meta charset="utf-8"><title>OTT Release Radar – Components Map</title>
+<style>
+@page { size: 1600px 2558px; margin: 0; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Segoe UI", Inter, system-ui, sans-serif; color: #1f2937; background: #fff; }
+.page { position: relative; width: 1600px; page-break-after: always; overflow: hidden; }
+h1 { position: absolute; left: 56px; top: 40px; margin: 0; font-size: 46px; font-weight: 700; color: #111827; letter-spacing: -0.5px; }
+.subtitle { position: absolute; left: 56px; top: 112px; margin: 0; font-size: 22px; font-style: italic; color: #6b7280; }
+.thead { position: absolute; left: 56px; top: 190px; height: 56px; width: 1488px; background: #1e293b; border-radius: 14px 14px 0 0; display: flex; color: #fff; font-weight: 700; font-size: 20px; }
+.thead > div { display: flex; align-items: center; justify-content: center; border-right: 1px solid #334155; }
+.thead > div:last-child { border-right: 0; }
+.grid { position: absolute; left: 56px; width: 1488px; background: #f8fafc; border: 1px solid #e5e7eb; border-top: 0; border-radius: 0 0 14px 14px; }
+.colline { position: absolute; top: 246px; height: 2122px; border-left: 1px solid #e5e7eb; }
+.rowline { position: absolute; left: 386px; width: 1158px; border-top: 1px solid #eef0f3; }
+.lane { position: absolute; left: 64px; width: 314px; border-radius: 12px; display: flex; align-items: center; gap: 22px; padding-left: 30px; }
+.lane-icon { display: flex; }
+.actor { font-size: 21px; font-weight: 700; color: #111827; }
+.sub { font-size: 17px; font-style: italic; color: #6b7280; margin-top: 4px; }
+.arrows { position: absolute; left: 0; top: 0; }
+.card { position: absolute; border: 2.5px solid; border-radius: 12px; padding: 16px 18px; }
+.num { position: absolute; left: -15px; top: -15px; width: 30px; height: 30px; border-radius: 50%; color: #fff; font-weight: 700; font-size: 15px; display: flex; align-items: center; justify-content: center; border: 3px solid #fff; }
+.ct { font-size: 17px; font-weight: 700; color: #111827; line-height: 1.25; }
+.cb { font-size: 14px; color: #4b5563; line-height: 1.38; margin-top: 6px; }
+.note { position: absolute; left: 814.46px; width: 717.96px; border: 2.5px solid #22c55e; background: #f0fdf4; border-radius: 12px; padding: 18px 24px; display: flex; gap: 20px; align-items: center; }
+.nt { font-size: 18px; font-weight: 700; color: #14532d; }
+.nb { font-size: 15px; color: #4b5563; margin-top: 4px; }
+.foot { position: absolute; left: 56px; margin: 0; font-size: 16px; font-style: italic; color: #6b7280; }
+.detail { padding: 0 56px 60px; }
+.detail h1, .detail .subtitle { position: static; }
+.detail h1 { padding-top: 40px; }
+.detail .subtitle { margin: 8px 0 28px; }
+table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 16.5px; line-height: 1.55; border: 1px solid #e5e7eb; border-radius: 14px; overflow: hidden; }
+th { background: #1e293b; color: #fff; font-size: 17px; padding: 14px 12px; text-align: left; }
+td { padding: 18px 14px; vertical-align: top; border-top: 1px solid #eef0f3; color: #374151; }
+tr:nth-child(even) td { background: #f8fafc; }
+td.dn { width: 46px; } td.dn span { display: inline-flex; width: 28px; height: 28px; border-radius: 50%; color: #fff; font-weight: 700; align-items: center; justify-content: center; }
+td.da { width: 230px; } td.da i { color: #6b7280; } .dt { margin-top: 6px; font-weight: 600; color: #111827; }
+.legend { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 24px; font-size: 15px; color: #374151; }
+.legend i { display: inline-block; width: 18px; height: 18px; border-radius: 4px; vertical-align: -3px; margin-right: 8px; border: 1px solid #d1d5db; }
+.foot2 { margin-top: 18px; font-size: 14px; font-style: italic; color: #6b7280; }
+</style></head><body><section class="page" style="height:2558px">
+  <h1>OTT Release Radar – Components Map</h1>
+  <p class="subtitle">How the app works, step by step</p>
+  <div class="thead">
+  <div style="width:330px">Actor / Step</div><div style="width:231.6px">Trigger</div><div style="width:231.6px">Input</div><div style="width:231.6px">Context</div><div style="width:231.6px">Processing</div><div style="width:231.6px">Output</div></div>
+  <div class="grid" style="top:246px;height:2122px"></div>
+  <div class="colline" style="left:386px"></div><div class="colline" style="left:617.6px"></div><div class="colline" style="left:849.2px"></div><div class="colline" style="left:1080.8px"></div><div class="colline" style="left:1312.4px"></div><div class="rowline" style="top:422px"></div><div class="rowline" style="top:598px"></div><div class="rowline" style="top:774px"></div><div class="rowline" style="top:950px"></div><div class="rowline" style="top:1126px"></div><div class="rowline" style="top:1302px"></div><div class="rowline" style="top:1478px"></div><div class="rowline" style="top:1654px"></div><div class="rowline" style="top:1830px"></div><div class="rowline" style="top:2006px"></div><div class="rowline" style="top:2182px"></div><div class="rowline" style="top:2358px"></div><div class="lane" style="top:252px;height:164px;background:#e9f3fb">
+      <div class="lane-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+      <div><div class="actor">Vercel Cron</div><div class="sub">Daily refresh job</div></div></div><div class="lane" style="top:428px;height:164px;background:#f1edfb">
+      <div class="lane-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 3v18"/><path d="M3 7.5h4"/><path d="M3 12h18"/><path d="M3 16.5h4"/><path d="M17 3v18"/><path d="M17 7.5h4"/><path d="M17 16.5h4"/></svg></div>
+      <div><div class="actor">TMDB API</div><div class="sub">Release data source</div></div></div><div class="lane" style="top:604px;height:164px;background:#fbf1e4">
+      <div class="lane-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <div><div class="actor">Release Radar App</div><div class="sub">Release validator</div></div></div><div class="lane" style="top:780px;height:164px;background:#eaf5ec">
+      <div class="lane-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg></div>
+      <div><div class="actor">Supabase</div><div class="sub">Catalogue store</div></div></div><div class="lane" style="top:956px;height:164px;background:#eef1f6">
+      <div class="lane-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <div><div class="actor">Naman</div><div class="sub">Signs in &amp; sets his taste</div></div></div><div class="lane" style="top:1132px;height:164px;background:#e9f3fb">
+      <div class="lane-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 14v2.2l1.6 1"/><path d="M16 2v3"/><path d="M21 7.338V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h2.338"/><path d="M3 9h5.859"/><path d="M8 2v3"/><circle cx="16" cy="16" r="6"/></svg></div>
+      <div><div class="actor">Naman · Vercel Cron</div><div class="sub">Discover · Friday 6 PM</div></div></div><div class="lane" style="top:1308px;height:164px;background:#eaf5ec">
+      <div class="lane-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg></div>
+      <div><div class="actor">Supabase</div><div class="sub">Window &amp; profile</div></div></div><div class="lane" style="top:1484px;height:164px;background:#f1edfb">
+      <div class="lane-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></div>
+      <div><div class="actor">Gemini Flash</div><div class="sub">Recommendation engine</div></div></div><div class="lane" style="top:1660px;height:164px;background:#fbf1e4">
+      <div class="lane-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5h10"/><path d="M11 12h10"/><path d="M11 19h10"/><path d="M4 4h1v5"/><path d="M4 9h2"/><path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.02"/></svg></div>
+      <div><div class="actor">Release Radar App</div><div class="sub">Digest builder</div></div></div><div class="lane" style="top:1836px;height:164px;background:#f1edfb">
+      <div class="lane-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></div>
+      <div><div class="actor">Telegram Bot</div><div class="sub">Delivery</div></div></div><div class="lane" style="top:2012px;height:164px;background:#eef1f6">
+      <div class="lane-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a2 2 0 0 0 0-4 2 2 0 0 0-4 0 2 2 0 0 0-4 0 2 2 0 0 0-4 0 2 2 0 0 0 0 4"/><path d="M10 22 9 8"/><path d="m14 22 1-14"/><path d="M20 8c.5 0 .9.4.8 1l-2.6 12c-.1.5-.7 1-1.2 1H7c-.6 0-1.1-.4-1.2-1L3.2 9c-.1-.6.3-1 .8-1Z"/></svg></div>
+      <div><div class="actor">Naman</div><div class="sub">Watch decision</div></div></div><div class="lane" style="top:2188px;height:164px;background:#fbf1e4">
+      <div class="lane-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></div>
+      <div><div class="actor">Release Radar App</div><div class="sub">History &amp; monitoring</div></div></div>
+  <svg class="arrows" width="1600" height="2558"><path d="M501.8,409 L501.8,422 L733.4,422 L733.4,426" fill="none" stroke="#475569" stroke-width="2"/><path d="M727.4,424 L739.4,424 L733.4,434 Z" fill="#475569"/><path d="M733.4,585 L733.4,598 L1196.6,598 L1196.6,602" fill="none" stroke="#475569" stroke-width="2"/><path d="M1190.6,600 L1202.6,600 L1196.6,610 Z" fill="#475569"/><path d="M1196.6,761 L1196.6,774 L965,774 L965,778" fill="none" stroke="#475569" stroke-width="2"/><path d="M959,776 L971,776 L965,786 Z" fill="#475569"/><path d="M965,937 L965,950 L733.4,950 L733.4,954" fill="none" stroke="#475569" stroke-width="2"/><path d="M727.4,952 L739.4,952 L733.4,962 Z" fill="#475569"/><path d="M733.4,1113 L733.4,1126 L501.8,1126 L501.8,1130" fill="none" stroke="#475569" stroke-width="2"/><path d="M495.8,1128 L507.8,1128 L501.8,1138 Z" fill="#475569"/><path d="M501.8,1289 L501.8,1302 L965,1302 L965,1306" fill="none" stroke="#475569" stroke-width="2"/><path d="M959,1304 L971,1304 L965,1314 Z" fill="#475569"/><path d="M965,1465 L965,1478 L1196.6,1478 L1196.6,1482" fill="none" stroke="#475569" stroke-width="2"/><path d="M1190.6,1480 L1202.6,1480 L1196.6,1490 Z" fill="#475569"/><path d="M1196.6,1641 L1196.6,1658" fill="none" stroke="#475569" stroke-width="2"/><path d="M1190.6,1656 L1202.6,1656 L1196.6,1666 Z" fill="#475569"/><path d="M1196.6,1817 L1196.6,1830 L1428.2,1830 L1428.2,1834" fill="none" stroke="#475569" stroke-width="2"/><path d="M1422.2,1832 L1434.2,1832 L1428.2,1842 Z" fill="#475569"/><path d="M1428.2,1993 L1428.2,2010" fill="none" stroke="#475569" stroke-width="2"/><path d="M1422.2,2008 L1434.2,2008 L1428.2,2018 Z" fill="#475569"/><path d="M1428.2,2169 L1428.2,2186" fill="none" stroke="#475569" stroke-width="2"/><path d="M1422.2,2184 L1434.2,2184 L1428.2,2194 Z" fill="#475569"/></svg>
+  <div class="card" style="left:397px;top:259px;width:209.6px;height:150px;border-color:#3b82f6;background:#eff6ff">
+      <div class="num" style="background:#3b82f6">1</div>
+      <div class="ct">Daily refresh runs</div><div class="cb">06:00 IST (00:30 UTC) calls /api/cron/refresh — only with the CRON_SECRET bearer</div></div><div class="card" style="left:628.6px;top:435px;width:209.6px;height:150px;border-color:#0ea5e9;background:#f0f9ff">
+      <div class="num" style="background:#0ea5e9">2</div>
+      <div class="ct">Pulls India releases</div><div class="cb">Last 7 days on Netflix · Prime · Hotstar: dates, providers, genres, runtime, episodes</div></div><div class="card" style="left:1091.8px;top:611px;width:209.6px;height:150px;border-color:#f97316;background:#fff7ed">
+      <div class="num" style="background:#f97316">3</div>
+      <div class="ct">Verifies the OTT date</div><div class="cb">India digital date or platform-original premiere = ✓ verified; theatrical / global = unverified</div></div><div class="card" style="left:860.2px;top:787px;width:209.6px;height:150px;border-color:#22c55e;background:#f0fdf4">
+      <div class="num" style="background:#22c55e">4</div>
+      <div class="ct">Saves titles &amp; releases</div><div class="cb">Upserts titles + ott_releases, logs the run; a failed fetch never deletes data</div></div><div class="card" style="left:628.6px;top:963px;width:209.6px;height:150px;border-color:#14b8a6;background:#f0fdfa">
+      <div class="num" style="background:#14b8a6">5</div>
+      <div class="ct">Sets his preferences</div><div class="cb">Thriller · Sci-fi · Indie drama, Hindi · English · Tamil, his platforms, discovery mode</div></div><div class="card" style="left:397px;top:1139px;width:209.6px;height:150px;border-color:#3b82f6;background:#eff6ff">
+      <div class="num" style="background:#3b82f6">6</div>
+      <div class="ct">Asks “what’s new?”</div><div class="cb">Opens Discover / This Week or Preview — or the Friday 18:00 IST cron fires</div></div><div class="card" style="left:860.2px;top:1315px;width:209.6px;height:150px;border-color:#22c55e;background:#f0fdf4">
+      <div class="num" style="background:#22c55e">7</div>
+      <div class="ct">Loads this week for him</div><div class="cb">Releases in the IST window + his preferences, watchlist &amp; cached AI verdicts</div></div><div class="card" style="left:1091.8px;top:1491px;width:209.6px;height:150px;border-color:#8b5cf6;background:#f5f3ff">
+      <div class="num" style="background:#8b5cf6">8</div>
+      <div class="ct">Scores each new title</div><div class="cb">0–100 match, watch / maybe / skip, 2-line synopsis, reason — Zod-validated</div></div><div class="card" style="left:1091.8px;top:1667px;width:209.6px;height:150px;border-color:#f97316;background:#fff7ed">
+      <div class="num" style="background:#f97316">9</div>
+      <div class="ct">Builds the Friday digest</div><div class="cb">Verified only, his platforms + languages, ranked by match, top 10</div></div><div class="card" style="left:1323.4px;top:1843px;width:209.6px;height:150px;border-color:#eab308;background:#fefce8">
+      <div class="num" style="background:#eab308">10</div>
+      <div class="ct">Sends the digest</div><div class="cb">To his verified chat, once per week; resumes if half-sent</div></div><div class="card" style="left:1323.4px;top:2019px;width:209.6px;height:150px;border-color:#8b5cf6;background:#f5f3ff">
+      <div class="num" style="background:#8b5cf6">11</div>
+      <div class="ct">Picks tonight’s watch</div><div class="cb">Reads verdicts, saves to watchlist, “Pick My Next Watch” — the app suggests, he decides</div></div><div class="card" style="left:1323.4px;top:2195px;width:209.6px;height:150px;border-color:#0ea5e9;background:#f0f9ff">
+      <div class="num" style="background:#0ea5e9">12</div>
+      <div class="ct">Logs &amp; monitors</div><div class="cb">Digest History, last sync, integration health &amp; next run in Settings</div></div>
+  <div class="note" style="top:2408px">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#15803d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+    <div><div class="nt">Supabase keeps the catalogue, preferences, AI verdicts &amp; delivery logs</div>
+    <div class="nb">(steps 4, 5, 7 &amp; 10) · per-user rows locked by Row Level Security · AI verdicts are reused until the title or his preferences change</div></div>
+  </div>
+  <p class="foot" style="top:2518px">OTT Release Radar · Next.js on Vercel · TMDB live data · Gemini Flash recommends — Naman decides</p>
+</section><section class="page detail">
+  <h1>Step details</h1>
+  <p class="subtitle">Every process in the map, under the same headers</p>
+  <table><thead><tr><th>#</th><th>Actor / Step</th><th>Trigger</th><th>Input</th><th>Context</th><th>Processing</th><th>Output</th></tr></thead><tbody><tr><td class="dn"><span style="background:#3b82f6">1</span></td>
+      <td class="da"><b>Vercel Cron</b><br><i>Daily refresh job</i><div class="dt">Daily refresh runs</div></td>
+      <td>Vercel Cron, schedule “30 0 * * *” in vercel.json (UTC). Manual “Refresh Releases” button does the same (max once per 5 min).</td><td>Authorization: Bearer CRON_SECRET, checked with a constant-time compare.</td><td>automation_runs row keyed release_refresh:&lt;IST date&gt; — a second run the same day is skipped.</td><td>Computes the 7-day window in Asia/Kolkata: today − 6 … today.</td><td>Starts the refresh pipeline (step 2).</td></tr><tr><td class="dn"><span style="background:#0ea5e9">2</span></td>
+      <td class="da"><b>TMDB API</b><br><i>Release data source</i><div class="dt">Pulls India releases</div></td>
+      <td>Refresh pipeline (releases.service → TmdbReleaseAdapter).</td><td>/discover/movie &amp; /discover/tv with watch_region=IN, provider IDs 8, 119, 122/2336, release &amp; air-date filters; a pass per users’ languages.</td><td>Provider map in config/providers.ts (stable IDs first, names as fallback).</td><td>Fetches details + release_dates + watch/providers for up to 160 candidates, 6 at a time, with retries on 429/5xx.</td><td>Raw candidate titles with India provider listings.</td></tr><tr><td class="dn"><span style="background:#f97316">3</span></td>
+      <td class="da"><b>Release Radar App</b><br><i>Release validator</i><div class="dt">Verifies the OTT date</div></td>
+      <td>Each candidate from step 2.</td><td>Release-date types per country, season air dates, original TV network, India providers.</td><td>Rules in lib/release/eligibility.ts; window is never widened.</td><td>Movie: India Digital (type 4) date in window → verified. Series/season premiere in window on its own platform → verified. Global digital / primary date → unverified. Old-season episodes → excluded. Duplicates collapsed.</td><td>Normalised titles + release events, each marked verified or unverified_date.</td></tr><tr><td class="dn"><span style="background:#22c55e">4</span></td>
+      <td class="da"><b>Supabase</b><br><i>Catalogue store</i><div class="dt">Saves titles &amp; releases</div></td>
+      <td>Validated records from step 3.</td><td>titles (unique tmdb_id + media_type), ott_releases (unique title × provider × region × event).</td><td>Metadata fingerprint per title detects real changes; first_seen_at preserved.</td><td>Idempotent upserts; automation_runs + integration_status updated (succeeded / partial / failed).</td><td>Live catalogue + “Last synced” timestamp. On TMDB failure the last good data stays and is labelled as such.</td></tr><tr><td class="dn"><span style="background:#14b8a6">5</span></td>
+      <td class="da"><b>Naman</b><br><i>Signs in &amp; sets his taste</i><div class="dt">Sets his preferences</div></td>
+      <td>Signs in (Supabase Auth, email + password) and opens My Preferences.</td><td>Genres, languages, platforms, movies/series, runtime, dubbed, popular vs hidden gems, Stick / Balanced / Surprise me, mood.</td><td>user_preferences row created on sign-up with the brief’s defaults.</td><td>PUT /api/preferences validated with Zod; RLS + column grants let him edit only his own safe columns.</td><td>Saved taste profile (Save / Cancel / Reset to defaults).</td></tr><tr><td class="dn"><span style="background:#3b82f6">6</span></td>
+      <td class="da"><b>Naman · Vercel Cron</b><br><i>Discover · Friday 6 PM</i><div class="dt">Asks “what’s new?”</div></td>
+      <td>Page visit, “Get AI verdicts”, “Preview My Friday Digest”, “Send Test Digest”, or cron “30 12 * * *” (= 18:00 IST) on his digest day (Friday).</td><td>Signed-in session (JWT checked server-side) or CRON_SECRET.</td><td>Weekly run keyed weekly_digest:&lt;IST date&gt; — no duplicate runs.</td><td>Cron first runs a refresh, then finds users with digest on, Telegram connected and today = digest day.</td><td>A request to build his personalised list (step 7).</td></tr><tr><td class="dn"><span style="background:#22c55e">7</span></td>
+      <td class="da"><b>Supabase</b><br><i>Window &amp; profile</i><div class="dt">Loads this week for him</div></td>
+      <td>Step 6.</td><td>ott_releases ⋈ titles in the window, user_preferences, watchlist, viewing_feedback, ai_recommendations.</td><td>Preference fingerprint (genres, languages, platforms, mode, mood…) + title metadata fingerprint.</td><td>Reuses a verdict only if both fingerprints still match; otherwise the title is marked unscored.</td><td>Catalogue items: verified flag, platforms, release type, watch status, cached verdict.</td></tr><tr><td class="dn"><span style="background:#8b5cf6">8</span></td>
+      <td class="da"><b>Gemini Flash</b><br><i>Recommendation engine</i><div class="dt">Scores each new title</div></td>
+      <td>Unscored titles on his platforms + languages + content types (hard constraints first).</td><td>His profile + TMDB metadata only (overview, genres, runtime, votes). Metadata is fenced as untrusted data.</td><td>gemini-3.6-flash, fallback gemini-3.5-flash when busy; low thinking; batches of 12, sequential.</td><td>Structured JSON → Zod schema; rejects unknown titles and verdict/score contradictions; confidence capped by metadata completeness; no synopsis invented.</td><td>Verdicts saved to ai_recommendations. If Gemini fails, the catalogue still works with a retry message.</td></tr><tr><td class="dn"><span style="background:#f97316">9</span></td>
+      <td class="da"><b>Release Radar App</b><br><i>Digest builder</i><div class="dt">Builds the Friday digest</div></td>
+      <td>Scored items from step 8.</td><td>Verified releases, verdicts, watchlist / “Not interested” feedback.</td><td>Discovery mode: Stick = genre match only, Balanced = genre match or score ≥ 70, Surprise = any.</td><td>Drops watched / not-interested, ranks by score (skips last), formats title, platform, genre, language, runtime/episodes, why, verdict, match, synopsis, TMDB link; splits under 4096 chars.</td><td>Telegram-ready messages (Preview shows them without sending).</td></tr><tr><td class="dn"><span style="background:#eab308">10</span></td>
+      <td class="da"><b>Telegram Bot</b><br><i>Delivery</i><div class="dt">Sends the digest</div></td>
+      <td>Weekly cron or “Send Test Digest”.</td><td>Chat ID verified via a one-time /start code (getUpdates) — never typed by the user.</td><td>digest_history idempotency key weekly:&lt;user&gt;:&lt;period start&gt;; message chunks stored.</td><td>sendMessage (HTML, escaped). Records each accepted chunk; classifies blocked bot, bad chat, rate limit, network errors.</td><td>“sent” only when Telegram accepts every message; otherwise partial / failed with the reason.</td></tr><tr><td class="dn"><span style="background:#8b5cf6">11</span></td>
+      <td class="da"><b>Naman</b><br><i>Watch decision</i><div class="dt">Picks tonight’s watch</div></td>
+      <td>Friday digest in Telegram or the Discover page.</td><td>Watch / Maybe / Skip, match score, “Why this matches you”, filters (mood, watch time, hidden gems).</td><td>Watchlist statuses: Want to watch · Watching · Watched · Not interested.</td><td>Watchlist saved via /api/watchlist (RLS). “Not interested” becomes feedback that lowers future rankings.</td><td>His choice for tonight; preferences never change silently.</td></tr><tr><td class="dn"><span style="background:#0ea5e9">12</span></td>
+      <td class="da"><b>Release Radar App</b><br><i>History &amp; monitoring</i><div class="dt">Logs &amp; monitors</div></td>
+      <td>Every run and delivery.</td><td>automation_runs, digest_history, integration_status.</td><td>Live health checks (TMDB /configuration, Gemini model lookup, Telegram getMe), cached 5 min.</td><td>Shows preview / test sent / weekly sent / failed, last successful delivery and next scheduled run.</td><td>Errors visible in the app, details only in server logs.</td></tr></tbody></table>
+  <div class="legend">
+    <span><i style="background:#eef1f6"></i>Person</span>
+    <span><i style="background:#e9f3fb"></i>Scheduler / trigger</span>
+    <span><i style="background:#fbf1e4"></i>Release Radar app (Next.js on Vercel)</span>
+    <span><i style="background:#eaf5ec"></i>Supabase (Postgres + Auth)</span>
+    <span><i style="background:#f1edfb"></i>External API (TMDB · Gemini · Telegram)</span>
+  </div>
+  <p class="foot2">Live app: ott-release-radar-eight.vercel.app · Code: github.com/salonimesa29/ott-release-radar · Known limit: TMDB has no “date added to Netflix India” field, so unverified dates are shown but never sent in the digest.</p>
+</section></body></html>
