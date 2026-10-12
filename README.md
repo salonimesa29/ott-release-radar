@@ -119,7 +119,7 @@ Key design points:
 | UI | Tailwind CSS 4, shadcn/ui (Radix UI), lucide-react icons, motion, sonner toasts, cmdk |
 | Database and auth | Supabase (Postgres, Auth, RLS) via `@supabase/supabase-js` and `@supabase/ssr` |
 | Release data | TMDB API v3 (discover, details, release dates, watch providers) |
-| AI | Google Gemini Flash via `@google/genai` (default model id `gemini-flash-latest`) |
+| AI | Google Gemini Flash via `@google/genai` (default model id `gemini-3.6-flash`, fallback `GEMINI_FALLBACK_MODEL` when busy) |
 | Messaging | Telegram Bot API (`sendMessage`, `getUpdates`, `getMe`) |
 | Validation | Zod 4 |
 | Hosting and scheduling | Vercel, Vercel Cron |
@@ -175,7 +175,7 @@ Unverified releases are shown in the UI with a "Release date unverified" label, 
 
 Code: `src/lib/gemini/*`, `src/services/recommendations.service.ts`.
 
-- **Model:** Gemini Flash only. `GEMINI_MODEL` defaults to `gemini-flash-latest`.
+- **Model:** Gemini Flash only. `GEMINI_MODEL` defaults to `gemini-3.6-flash`; if Google returns busy/rate-limited (503/429), the request is retried once on `GEMINI_FALLBACK_MODEL` (e.g. `gemini-3.5-flash`).
 - **Pre-filtering:** only titles that match the user's platforms, languages and content types are sent, capped at 60 per request.
 - **Batching:** 15 titles per call, structured JSON output (`responseJsonSchema`), temperature 0.4, 45 s timeout. Titles that come back missing or invalid are retried once in a follow-up batch; anything still invalid is left unscored and reported, never invented.
 - **Validation (Zod + rules):**
@@ -263,7 +263,7 @@ TMDB requests use a 12 s timeout with up to two retries on 429 / 5xx / network e
 
 1. Create an API key at [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey).
 2. Set `GEMINI_API_KEY`.
-3. Optionally set `GEMINI_MODEL` to a specific Gemini Flash model id. The default is `gemini-flash-latest`. Only Flash models should be used, per the assignment rules.
+3. Optionally set `GEMINI_MODEL` to a specific Gemini Flash model id. The default is `gemini-3.6-flash`; optionally set `GEMINI_FALLBACK_MODEL` (e.g. `gemini-3.5-flash`). Only Flash models should be used, per the assignment rules.
 4. Settings → Data sources & AI → **Re-check** calls `models.get` to confirm the key and model exist.
 
 ## Environment variables
@@ -277,7 +277,8 @@ Copy `.env.example` to `.env.local` for local development, and add the same keys
 | `SUPABASE_SERVICE_ROLE_KEY` | **Server only** | Yes | Supabase service_role / secret key. Bypasses RLS. |
 | `TMDB_API_KEY` | **Server only** | Yes (for live data) | themoviedb.org → Settings → API. v4 Read Access Token (preferred) or v3 key. |
 | `GEMINI_API_KEY` | **Server only** | For AI verdicts | Google AI Studio |
-| `GEMINI_MODEL` | **Server only** | No | Defaults to `gemini-flash-latest` |
+| `GEMINI_MODEL` | **Server only** | No | Defaults to `gemini-3.6-flash` |
+| `GEMINI_FALLBACK_MODEL` | **Server only** | No | Flash model used when the primary is busy (503/429) |
 | `TELEGRAM_BOT_TOKEN` | **Server only** | For digests | @BotFather → `/newbot` |
 | `CRON_SECRET` | **Server only** | For cron jobs | Any random string of 16+ characters, e.g. `openssl rand -hex 32` |
 | `NEXT_PUBLIC_APP_URL` | Public | No | Listed in `.env.example` for reference; the current code does not read it (auth redirects use the browser's origin). |

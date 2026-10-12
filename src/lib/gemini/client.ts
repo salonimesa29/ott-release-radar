@@ -1,13 +1,17 @@
 import "server-only";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import type { MoodKey } from "@/config/taxonomy";
 import { env } from "@/lib/env";
+import { mapLimit } from "@/lib/http";
 import { metadataConfidence } from "@/lib/ranking/signals";
 import type { CatalogueItem, Preferences, Recommendation } from "@/types/domain";
 import { NO_SYNOPSIS, buildPrompt, preferenceLabels } from "./prompt";
 import { batchSchema, geminiResponseSchema, validateRecommendation } from "./schema";
 
-const BATCH_SIZE = 15;
+// Sequential batches keep us inside free-tier per-minute quotas.
+const BATCH_SIZE = 12;
+const CONCURRENCY = 1;
+const FALLBACK_PAUSE_MS = 4000;
 const MAX_ATTEMPTS = 2;
 
 export class GeminiError extends Error {
@@ -18,9 +22,12 @@ export class GeminiError extends Error {
 }
 
 function client() {
-  const { GEMINI_API_KEY, GEMINI_MODEL } = env("gemini");
-  return { ai: new GoogleGenAI({ apiKey: GEMINI_API_KEY }), model: GEMINI_MODEL };
+  const { GEMINI_API_KEY, GEMINI_MODEL, GEMINI_FALLBACK_MODEL } = env("gemini");
+  const models = [GEMINI_MODEL, ...(GEMINI_FALLBACK_MODEL && GEMINI_FALLBACK_MODEL !== GEMINI_MODEL ? [GEMINI_FALLBACK_MODEL] : [])];
+  return { ai: new GoogleGenAI({ apiKey: GEMINI_API_KEY }), model: GEMINI_MODEL, models };
 }
+
+const TRANSIENT = /429|RESOURCE_EXHAUSTED|503|UNAVAILABLE|504|DEADLINE_EXCEEDED|timeout|deadline/i;
 
 /** Verifies the key and model exist without spending generation tokens. */
 export async function geminiPing(): Promise<void> {
@@ -43,38 +50,67 @@ export async function generateRecommendations(
   prefs: Preferences,
   opts: { mood: MoodKey | null; notInterestedTitles: string[] },
 ): Promise<GenerationResult> {
-  const { ai, model } = client();
+  const { ai, models } = client();
   const out: Recommendation[] = [];
   const rejected = new Map<string, string>();
 
   let pending = items;
   for (let attempt = 1; attempt <= MAX_ATTEMPTS && pending.length; attempt++) {
     const failed: CatalogueItem[] = [];
-    for (let i = 0; i < pending.length; i += BATCH_SIZE) {
-      const batch = pending.slice(i, i + BATCH_SIZE);
-      const { valid, invalid } = await runBatch(ai, model, batch, prefs, opts);
-      out.push(...valid);
-      for (const [id, err] of invalid) {
-        rejected.set(id, err);
-        failed.push(batch.find((b) => b.title.id === id)!);
+    const batches: CatalogueItem[][] = [];
+    for (let i = 0; i < pending.length; i += BATCH_SIZE) batches.push(pending.slice(i, i + BATCH_SIZE));
+    const settled = await mapLimit(batches, CONCURRENCY, (batch) => runBatch(ai, models, batch, prefs, opts));
+    const errors = settled.filter((r): r is PromiseRejectedResult => r.status === "rejected");
+    // Every batch failed (e.g. Gemini down): surface the error so the caller can report it.
+    if (errors.length === settled.length) throw errors[0].reason;
+    settled.forEach((r, i) => {
+      if (r.status === "rejected") {
+        batches[i].forEach((b) => rejected.set(b.title.id, String(r.reason?.message ?? r.reason)));
+        return;
       }
-    }
+      out.push(...r.value.valid);
+      for (const [id, err] of r.value.invalid) {
+        rejected.set(id, err);
+        failed.push(batches[i].find((b) => b.title.id === id)!);
+      }
+    });
     pending = failed;
   }
   for (const r of out) rejected.delete(r.titleId);
-  return { recommendations: out, rejected: [...rejected].map(([titleId, error]) => ({ titleId, error })), model };
+  return { recommendations: out, rejected: [...rejected].map(([titleId, error]) => ({ titleId, error })), model: models[0] };
 }
 
 async function runBatch(
   ai: GoogleGenAI,
-  model: string,
+  models: string[],
   batch: CatalogueItem[],
   prefs: Preferences,
   opts: { mood: MoodKey | null; notInterestedTitles: string[] },
 ) {
   const { system, user } = buildPrompt(batch, prefs, opts.mood, opts.notInterestedTitles);
-  let text: string;
-  try {
+  let text = "";
+  let model = models[0];
+  for (let m = 0; m < models.length; m++) {
+    model = models[m];
+    try {
+      text = await generate(ai, model, system, user);
+      break;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      const transient = TRANSIENT.test(msg);
+      // Busy/rate-limited: try the fallback Flash model before giving up.
+      if (transient && m < models.length - 1) {
+        await new Promise((r) => setTimeout(r, FALLBACK_PAUSE_MS));
+        continue;
+      }
+      throw new GeminiError(transient ? `Gemini is busy or rate-limited: ${msg}` : `Gemini request failed: ${msg}`, transient);
+    }
+  }
+  return parseBatch(text, model, batch, prefs, opts);
+}
+
+async function generate(ai: GoogleGenAI, model: string, system: string, user: string): Promise<string> {
+  {
     const res = await ai.models.generateContent({
       model,
       contents: user,
@@ -83,16 +119,22 @@ async function runBatch(
         responseMimeType: "application/json",
         responseJsonSchema: geminiResponseSchema,
         temperature: 0.4,
-        httpOptions: { timeout: 45_000 },
+        // Scoring is structured extraction; deep reasoning only adds latency.
+        thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
+        httpOptions: { timeout: 50_000 },
       },
     });
-    text = res.text ?? "";
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    const transient = /429|RESOURCE_EXHAUSTED|503|UNAVAILABLE|timeout|deadline/i.test(msg);
-    throw new GeminiError(transient ? `Gemini is busy or rate-limited: ${msg}` : `Gemini request failed: ${msg}`, transient);
+    return res.text ?? "";
   }
+}
 
+function parseBatch(
+  text: string,
+  model: string,
+  batch: CatalogueItem[],
+  prefs: Preferences,
+  opts: { mood: MoodKey | null; notInterestedTitles: string[] },
+) {
   const invalid = new Map<string, string>();
   let rawItems: unknown[];
   try {

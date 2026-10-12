@@ -14,7 +14,8 @@ const groups = {
   tmdb: z.object({ TMDB_API_KEY: z.string().min(16) }),
   gemini: z.object({
     GEMINI_API_KEY: z.string().min(20),
-    GEMINI_MODEL: z.string().min(1).default("gemini-flash-latest"),
+    GEMINI_MODEL: z.string().min(1).default("gemini-3.6-flash"),
+    GEMINI_FALLBACK_MODEL: z.string().min(1).optional(),
   }),
   telegram: z.object({ TELEGRAM_BOT_TOKEN: z.string().regex(/^\d+:[\w-]{30,}$/, "looks malformed") }),
   cron: z.object({ CRON_SECRET: z.string().min(16, "must be at least 16 characters") }),
