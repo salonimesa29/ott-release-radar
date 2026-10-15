@@ -23,10 +23,11 @@ export async function upsertTitles(db: SupabaseClient, titles: NormalizedTitle[]
 
   const { data: existing, error: readErr } = await db
     .from("titles")
-    .select("tmdb_id,media_type,metadata_fingerprint")
+    .select("tmdb_id,media_type,metadata_fingerprint,metadata_updated_at")
     .in("tmdb_id", titles.map((t) => t.tmdbId));
   fail(readErr, "reading titles");
   const before = new Map((existing ?? []).map((r) => [key(r), r.metadata_fingerprint as string]));
+  const updatedAt = new Map((existing ?? []).map((r) => [key(r), r.metadata_updated_at as string]));
 
   const now = new Date().toISOString();
   const rows = titles.map((t) => ({
@@ -49,7 +50,13 @@ export async function upsertTitles(db: SupabaseClient, titles: NormalizedTitle[]
     vote_count: t.voteCount,
     popularity: t.popularity,
     metadata_fingerprint: t.metadataFingerprint,
-    ...(before.get(`${t.mediaType}:${t.tmdbId}`) !== t.metadataFingerprint ? { metadata_updated_at: now } : {}),
+    // Every row must carry the same columns: in a bulk upsert PostgREST sends NULL for a key
+    // missing from some rows, which breaks the NOT NULL constraint. Keep the old timestamp when
+    // metadata is unchanged.
+    metadata_updated_at:
+      before.get(`${t.mediaType}:${t.tmdbId}`) === t.metadataFingerprint
+        ? updatedAt.get(`${t.mediaType}:${t.tmdbId}`) ?? now
+        : now,
   }));
 
   const { data, error } = await db

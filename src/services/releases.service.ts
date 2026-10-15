@@ -55,7 +55,13 @@ export async function refreshReleases(opts: { trigger: "cron" | "manual"; now?: 
     const languages = [...new Set((langRows ?? []).flatMap((r) => r.preferred_languages as string[]))];
 
     const adapter = opts.adapter ?? new TmdbReleaseAdapter({ languages });
-    const result = await adapter.fetchWindow(window);
+    let result;
+    try {
+      result = await adapter.fetchWindow(window);
+    } catch (err) {
+      throw Object.assign(err instanceof Error ? err : new Error(String(err)), { source: "tmdb" as const });
+    }
+    await recordIntegration(admin, "tmdb", true);
 
     const { ids, changed } = await upsertTitles(admin, result.records.map((r) => r.title));
     const releases = result.records.flatMap((r) =>
@@ -85,13 +91,18 @@ export async function refreshReleases(opts: { trigger: "cron" | "manual"; now?: 
       failed: result.failures.length,
       summary: { ...summary, failureSamples: result.failures.slice(0, 5), source: adapter.name },
     });
-    await recordIntegration(admin, "tmdb", true);
     return summary;
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("Release refresh failed", err);
     await finishRun(admin, run.id, { status: "failed", processed: 0, failed: 0, summary: { window }, error: message.slice(0, 500) });
-    await recordIntegration(admin, "tmdb", false, message);
-    return { ...empty, runId: run.id, status: "failed", message: "Couldn't reach TMDB. Showing the last successful data." };
+    const fromTmdb = (err as { source?: string })?.source === "tmdb";
+    await recordIntegration(admin, fromTmdb ? "tmdb" : "supabase", false, message);
+    return {
+      ...empty,
+      runId: run.id,
+      status: "failed",
+      message: fromTmdb ? "Couldn't reach TMDB. Showing the last successful data." : "Couldn't save the new releases. Showing the last successful data.",
+    };
   }
 }
