@@ -1,14 +1,28 @@
 "use client";
-import { Check, Minus, X, HelpCircle } from "lucide-react";
+import { Check, HelpCircle, Loader2, Minus, Sparkles, X } from "lucide-react";
 import type { MoodKey } from "@/config/taxonomy";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { matchSignals } from "@/lib/ranking/signals";
+import { matchSignals, scoringExclusion } from "@/lib/ranking/signals";
 import { cn } from "@/lib/utils";
 import type { CatalogueItem, Preferences } from "@/types/domain";
 
 /** Score ring; clicking opens "Why this matches you", built from real signals only. */
-export function MatchScore({ item, prefs, mood, size = "md" }: { item: CatalogueItem; prefs: Preferences; mood: MoodKey | null; size?: "sm" | "md" | "lg" }) {
+export function MatchScore({
+  item,
+  prefs,
+  mood,
+  size = "md",
+  pending = false,
+}: {
+  item: CatalogueItem;
+  prefs: Preferences;
+  mood: MoodKey | null;
+  size?: "sm" | "md" | "lg";
+  /** Gemini is currently generating verdicts for this page. */
+  pending?: boolean;
+}) {
   const rec = item.recommendation;
+  const excluded = rec ? null : scoringExclusion(item, prefs);
   const dim = size === "lg" ? 56 : size === "sm" ? 36 : 44;
   const r = 15;
   const c = 2 * Math.PI * r;
@@ -21,7 +35,10 @@ export function MatchScore({ item, prefs, mood, size = "md" }: { item: Catalogue
           type="button"
           className="relative grid shrink-0 place-items-center rounded-full outline-none transition hover:scale-105 focus-visible:ring-2 focus-visible:ring-ring"
           style={{ width: dim, height: dim }}
-          aria-label={value === null ? "Match not scored yet — see signals" : `${value} out of 100 match — why?`}
+          aria-label={
+            value !== null ? `${value} out of 100 match — why?` : excluded ?? (pending ? "Gemini is scoring this title" : "Not scored yet — see signals")
+          }
+          title={excluded ?? undefined}
         >
           <svg viewBox="0 0 36 36" className="absolute inset-0 -rotate-90">
             <circle cx="18" cy="18" r={r} fill="rgb(7 7 10 / .7)" stroke="rgb(255 255 255 / .1)" strokeWidth="2.5" />
@@ -35,7 +52,15 @@ export function MatchScore({ item, prefs, mood, size = "md" }: { item: Catalogue
               </linearGradient>
             </defs>
           </svg>
-          <span className={cn("relative font-semibold tabular-nums", size === "lg" ? "text-base" : "text-xs")}>{value ?? "–"}</span>
+          {value !== null ? (
+            <span className={cn("relative font-semibold tabular-nums", size === "lg" ? "text-base" : "text-xs")}>{value}</span>
+          ) : excluded ? (
+            <span className="relative text-[10px] font-semibold tracking-wide text-muted-foreground">N/A</span>
+          ) : pending ? (
+            <Loader2 className="relative size-4 animate-spin text-violet" />
+          ) : (
+            <Sparkles className="relative size-4 text-muted-foreground" />
+          )}
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-80" align="end">
@@ -79,7 +104,9 @@ export function WhyThisMatches({ item, prefs, mood }: { item: CatalogueItem; pre
   return (
     <div className="text-sm">
       <p className="font-display text-xl">Why this matches you</p>
-      {rec ? (
+      {!rec && scoringExclusion(item, prefs) ? (
+        <p className="mt-1 text-maybe">{scoringExclusion(item, prefs)} Gemini only scores titles you can actually watch.</p>
+      ) : rec ? (
         <p className="mt-1 text-muted-foreground">
           Gemini: <span className="text-foreground">{rec.matchScore}/100</span>, {rec.verdict}. {rec.explanation}
         </p>

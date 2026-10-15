@@ -125,11 +125,11 @@ export function ThisWeekView({ initialItems, prefs, window, lastSyncedAt, lastRe
         </div>
       ) : view === "grid" ? (
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {items.slice(0, shown).map((i, n) => <ReleaseCard key={i.title.id} index={n % PAGE} item={i} prefs={prefs} mood={null} onWatchStatus={cat.setWatchStatus} href={href(i.title.id)} />)}
+          {items.slice(0, shown).map((i, n) => <ReleaseCard key={i.title.id} index={n % PAGE} item={i} prefs={prefs} mood={null} onWatchStatus={cat.setWatchStatus} pending={cat.aiState === "loading"} href={href(i.title.id)} />)}
         </div>
       ) : (
         <div className="space-y-2">
-          {items.slice(0, shown).map((i) => <ReleaseRow key={i.title.id} item={i} prefs={prefs} mood={null} onWatchStatus={cat.setWatchStatus} href={href(i.title.id)} />)}
+          {items.slice(0, shown).map((i) => <ReleaseRow key={i.title.id} item={i} prefs={prefs} mood={null} onWatchStatus={cat.setWatchStatus} pending={cat.aiState === "loading"} href={href(i.title.id)} />)}
         </div>
       )}
       {items.length > shown && (

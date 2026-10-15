@@ -195,7 +195,7 @@ export function DiscoverView({
         ) : items.length ? (
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             {items.slice(0, 20).map((i, n) => (
-              <ReleaseCard key={i.title.id} index={n} item={i} prefs={prefs} mood={filters.mood} onWatchStatus={cat.setWatchStatus} href={`/title/${i.title.id}`} />
+              <ReleaseCard key={i.title.id} index={n} item={i} prefs={prefs} mood={filters.mood} onWatchStatus={cat.setWatchStatus} pending={cat.aiState === "loading"} href={`/title/${i.title.id}`} />
             ))}
           </div>
         ) : (

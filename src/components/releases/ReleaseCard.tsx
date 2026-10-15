@@ -24,6 +24,14 @@ export function lengthText(item: CatalogueItem): string | null {
   return parts.length ? parts.join(" · ") : null;
 }
 
+/** One line under every title: the AI reason, or why there is no score yet. */
+export function verdictNote(item: CatalogueItem, prefs: Preferences, pending: boolean): string {
+  if (item.recommendation) return item.recommendation.explanation;
+  const excluded = scoringExclusion(item, prefs);
+  if (excluded) return excluded;
+  return pending ? "Gemini is scoring this title…" : "AI verdict not generated yet.";
+}
+
 export function ReleaseCard({
   item,
   prefs,
@@ -31,6 +39,7 @@ export function ReleaseCard({
   onWatchStatus,
   href,
   index = 0,
+  pending = false,
 }: {
   item: CatalogueItem;
   prefs: Preferences;
@@ -38,6 +47,7 @@ export function ReleaseCard({
   onWatchStatus: (id: string, s: WatchStatus | null) => void;
   href: string;
   index?: number;
+  pending?: boolean;
 }) {
   const t = item.title;
   const rec = item.recommendation;
@@ -75,7 +85,7 @@ export function ReleaseCard({
             </span>
             {rec && <VerdictBadge verdict={rec.verdict} />}
           </div>
-          <MatchScore item={item} prefs={prefs} mood={mood} />
+          <MatchScore item={item} prefs={prefs} mood={mood} pending={pending} />
         </div>
       </div>
 
@@ -96,7 +106,7 @@ export function ReleaseCard({
           </div>
         )}
         <p className={cn("mt-auto line-clamp-3 border-t border-border pt-2.5 text-[13px] leading-relaxed", rec ? "text-foreground/80" : "text-muted-foreground")}>
-          {rec ? rec.explanation : scoringExclusion(item, prefs) ?? "AI verdict not generated yet."}
+          {verdictNote(item, prefs, pending)}
         </p>
       </div>
     </motion.article>
@@ -109,12 +119,14 @@ export function ReleaseRow({
   mood,
   onWatchStatus,
   href,
+  pending = false,
 }: {
   item: CatalogueItem;
   prefs: Preferences;
   mood: MoodKey | null;
   onWatchStatus: (id: string, s: WatchStatus | null) => void;
   href: string;
+  pending?: boolean;
 }) {
   const t = item.title;
   const rec = item.recommendation;
@@ -142,8 +154,9 @@ export function ReleaseRow({
             <PlatformBadge key={p} platform={p} />
           ))}
         </div>
+        <p className={cn("mt-1.5 line-clamp-1 text-xs", rec ? "text-foreground/70" : "text-muted-foreground")}>{verdictNote(item, prefs, pending)}</p>
       </div>
-      <MatchScore item={item} prefs={prefs} mood={mood} size="sm" />
+      <MatchScore item={item} prefs={prefs} mood={mood} size="sm" pending={pending} />
       <WatchlistControl titleId={t.id} status={item.watchStatus} onChange={(s) => onWatchStatus(t.id, s)} />
     </div>
   );
