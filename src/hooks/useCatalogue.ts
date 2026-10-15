@@ -1,15 +1,16 @@
 "use client";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import type { MoodKey, WatchStatus } from "@/config/taxonomy";
 import { api } from "@/lib/client-api";
-import type { CatalogueItem } from "@/types/domain";
+import { scoringExclusion } from "@/lib/ranking/signals";
+import type { CatalogueItem, Preferences } from "@/types/domain";
 
 type RefreshState = "idle" | "loading" | "success" | "error";
 
 /** Client state for the release catalogue: watchlist edits, refresh, and AI generation. */
-export function useCatalogue(initial: CatalogueItem[]) {
+export function useCatalogue(initial: CatalogueItem[], prefs: Preferences, opts: { autoScore?: boolean } = {}) {
   const router = useRouter();
   const [items, setItems] = useState(initial);
   const [refreshState, setRefreshState] = useState<RefreshState>("idle");
@@ -55,5 +56,17 @@ export function useCatalogue(initial: CatalogueItem[]) {
     setTimeout(() => setRefreshState("idle"), 4000);
   }, [router]);
 
-  return { items, setItems, setWatchStatus, refresh, refreshState, generateAi, aiState, aiError };
+  // Titles the viewer could watch that still lack a verdict (others are skipped on purpose).
+  const unscored = items.filter((i) => i.verified && !i.recommendation && scoringExclusion(i, prefs) === null).length;
+
+  // Generate missing verdicts once per page visit; cached ones are reused server-side.
+  const autoRan = useRef(false);
+  useEffect(() => {
+    if (!opts.autoScore || autoRan.current || unscored === 0) return;
+    autoRan.current = true;
+    const t = setTimeout(() => generateAi(prefs.mood), 0);
+    return () => clearTimeout(t);
+  }, [opts.autoScore, unscored, generateAi, prefs.mood]);
+
+  return { items, setItems, setWatchStatus, refresh, refreshState, generateAi, aiState, aiError, unscored };
 }

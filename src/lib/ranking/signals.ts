@@ -98,6 +98,20 @@ export function hiddenGemIds(items: CatalogueItem[]): Set<string> {
   );
 }
 
+/**
+ * Hard constraints for AI scoring. Returns why a title is skipped (shown on the card),
+ * or null if it should be scored. Gemini calls are only spent on titles the viewer can use.
+ */
+export function scoringExclusion(
+  item: Pick<CatalogueItem, "title" | "platforms">,
+  prefs: Pick<Preferences, "languages" | "platforms" | "contentTypes">,
+): string | null {
+  if (!matchesLanguage(item.title, prefs.languages)) return `Not scored — ${languageLabel(item.title.originalLanguage)} isn’t one of your languages.`;
+  if (!onPlatforms(item.platforms, prefs.platforms)) return "Not scored — not on your platforms.";
+  if (!prefs.contentTypes.includes(item.title.mediaType)) return `Not scored — you’ve turned off ${item.title.mediaType === "movie" ? "movies" : "series"}.`;
+  return null;
+}
+
 /** Rule-based preference score used only when no AI score exists (never shown as an AI score). */
 export function ruleScore(item: CatalogueItem, prefs: Pick<Preferences, "genres" | "languages">): number {
   const g = matchedGenreKeys(item.title, prefs.genres).length;

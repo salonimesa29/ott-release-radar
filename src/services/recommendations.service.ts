@@ -4,10 +4,10 @@ import type { MoodKey } from "@/config/taxonomy";
 import { isConfigured } from "@/lib/env";
 import { GeminiError, generateRecommendations } from "@/lib/gemini/client";
 import { recordIntegration } from "@/lib/db/ops";
-import { listNotInterested, saveRecommendations } from "@/lib/db/users";
-import { matchesLanguage, onPlatforms } from "@/lib/ranking/signals";
+import { getPreferences, listNotInterested, saveRecommendations } from "@/lib/db/users";
+import { scoringExclusion } from "@/lib/ranking/signals";
 import type { CatalogueItem, Preferences } from "@/types/domain";
-import { preferenceFingerprint } from "./catalogue.service";
+import { getCatalogue, preferenceFingerprint } from "./catalogue.service";
 
 const MAX_PER_REQUEST = 60;
 
@@ -33,12 +33,7 @@ export async function ensureRecommendations(opts: {
 }): Promise<EnsureResult> {
   const { admin, userId, prefs, items, mood } = opts;
   // Hard constraints: only spend Gemini calls on titles the user could actually watch.
-  const relevant = items.filter(
-    (i) =>
-      onPlatforms(i.platforms, prefs.platforms) &&
-      matchesLanguage(i.title, prefs.languages) &&
-      prefs.contentTypes.includes(i.title.mediaType),
-  );
+  const relevant = items.filter((i) => scoringExclusion(i, prefs) === null);
   const missing = relevant.filter((i) => !i.recommendation).slice(0, MAX_PER_REQUEST);
   const cached = relevant.length - relevant.filter((i) => !i.recommendation).length;
   if (!missing.length) return { items, generated: 0, cached, failed: 0, error: null };
@@ -85,4 +80,29 @@ export async function ensureRecommendations(opts: {
       error: err instanceof GeminiError && err.transient ? "Gemini is busy right now. Your catalogue still works — retry in a minute." : "AI recommendations failed. The catalogue still works; retry later.",
     };
   }
+}
+
+/**
+ * After the daily refresh, generate missing verdicts for every user so pages open already
+ * scored. Cached verdicts are reused, so this only costs Gemini calls for new/changed titles.
+ */
+export async function prescoreAllUsers(admin: SupabaseClient, maxUsers = 25) {
+  if (!isConfigured("gemini")) return { users: 0, generated: 0, failed: 0 };
+  const { data, error } = await admin.from("user_preferences").select("user_id").limit(maxUsers);
+  if (error) throw new Error(`Database error while listing users: ${error.message}`);
+  let generated = 0;
+  let failed = 0;
+  for (const { user_id: userId } of data ?? []) {
+    try {
+      const prefs = await getPreferences(admin, userId);
+      const catalogue = await getCatalogue(admin, userId, prefs);
+      const r = await ensureRecommendations({ admin, userId, prefs, items: catalogue.items, mood: null });
+      generated += r.generated;
+      failed += r.failed;
+    } catch (err) {
+      console.error("prescore failed for a user", err);
+      failed++;
+    }
+  }
+  return { users: data?.length ?? 0, generated, failed };
 }

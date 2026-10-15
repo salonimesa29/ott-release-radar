@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import type { MoodKey, WatchStatus } from "@/config/taxonomy";
 import { languageLabel } from "@/config/taxonomy";
+import { scoringExclusion } from "@/lib/ranking/signals";
 import { cn } from "@/lib/utils";
 import type { CatalogueItem, Preferences } from "@/types/domain";
 import { WatchlistControl } from "@/components/watchlist/WatchlistControl";
@@ -95,7 +96,7 @@ export function ReleaseCard({
           </div>
         )}
         <p className={cn("mt-auto line-clamp-3 border-t border-border pt-2.5 text-[13px] leading-relaxed", rec ? "text-foreground/80" : "text-muted-foreground")}>
-          {rec ? rec.explanation : "AI verdict not generated yet."}
+          {rec ? rec.explanation : scoringExclusion(item, prefs) ?? "AI verdict not generated yet."}
         </p>
       </div>
     </motion.article>

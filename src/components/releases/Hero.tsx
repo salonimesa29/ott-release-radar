@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { languageLabel, type MoodKey, type WatchStatus } from "@/config/taxonomy";
+import { scoringExclusion } from "@/lib/ranking/signals";
 import type { CatalogueItem, Preferences } from "@/types/domain";
 import { WatchlistControl } from "@/components/watchlist/WatchlistControl";
 import { MatchScore } from "./MatchScore";
@@ -49,7 +50,7 @@ export function Hero({ item, prefs, mood, onWatchStatus }: { item: CatalogueItem
               <p className="mt-1 text-sm text-foreground/70">{rec.explanation}</p>
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">AI verdict not generated yet.</p>
+            <p className="text-sm text-muted-foreground">{scoringExclusion(item, prefs) ?? "AI verdict not generated yet."}</p>
           )}
         </div>
         <div className="flex flex-wrap gap-3">

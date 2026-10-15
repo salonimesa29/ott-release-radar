@@ -53,7 +53,7 @@ export function DiscoverView({
   lastSyncedAt: string | null;
   lastRefreshFailed: boolean;
 }) {
-  const cat = useCatalogue(initialItems);
+  const cat = useCatalogue(initialItems, prefs, { autoScore: true });
   const [filters, setFilters] = useState<DiscoveryFilters>(() => defaultFilters(prefs));
   const [draftGenres, setDraftGenres] = useState<GenreKey[]>(prefs.genres);
   const [draftLangs, setDraftLangs] = useState<string[]>(prefs.languages);
@@ -65,7 +65,7 @@ export function DiscoverView({
     [cat.items, prefs, watchlistCount, initialItems],
   );
   const featured = useMemo(() => applyFilters(cat.items, { ...defaultFilters(prefs), quick: "best" }).items[0] ?? null, [cat.items, prefs]);
-  const unscored = cat.items.filter((i) => i.verified && !i.recommendation).length;
+  const unscored = cat.unscored;
   const isDirty = JSON.stringify(filters) !== JSON.stringify(defaultFilters(prefs));
 
   const reset = () => {

@@ -22,7 +22,7 @@ const list = (v: string | null) => (v ? v.split(",").filter(Boolean) : null);
 
 /** Filters live in the URL so they survive navigating to a title and back. */
 export function ThisWeekView({ initialItems, prefs, window, lastSyncedAt, lastRefreshFailed }: { initialItems: CatalogueItem[]; prefs: Preferences; window: ReleaseWindow; lastSyncedAt: string | null; lastRefreshFailed: boolean }) {
-  const cat = useCatalogue(initialItems);
+  const cat = useCatalogue(initialItems, prefs, { autoScore: true });
   const sp = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -63,7 +63,7 @@ export function ThisWeekView({ initialItems, prefs, window, lastSyncedAt, lastRe
         <h1 className="mt-1 font-display text-4xl sm:text-5xl">{formatWindow(window)}</h1>
         <p className="mt-1 text-sm text-muted-foreground">Seven days to today, India time. The window is never widened to pad results.</p>
       </div>
-      <SyncBar lastSyncedAt={lastSyncedAt} lastRefreshFailed={lastRefreshFailed} refreshState={cat.refreshState} onRefresh={cat.refresh} unscored={cat.items.filter((i) => i.verified && !i.recommendation).length} aiState={cat.aiState} aiError={cat.aiError} onGenerate={() => cat.generateAi(null)} />
+      <SyncBar lastSyncedAt={lastSyncedAt} lastRefreshFailed={lastRefreshFailed} refreshState={cat.refreshState} onRefresh={cat.refresh} unscored={cat.unscored} aiState={cat.aiState} aiError={cat.aiError} onGenerate={() => cat.generateAi(null)} />
 
       <div className="space-y-4 rounded-2xl border border-border bg-card/60 p-4">
         <div className="flex flex-wrap items-center gap-3">
